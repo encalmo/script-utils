@@ -1,3 +1,5 @@
+![Maven Central Version](https://img.shields.io/maven-central/v/org.encalmo/script-utils_3?style=for-the-badge)
+
 # script-utils
 
 Few handy commandline argument parsing and console printing utilities for use in Scala-CLI scripts.
