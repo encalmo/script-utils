@@ -8,11 +8,11 @@ Few handy commandline argument parsing and console printing utilities for use in
 
 Use with SBT
 
-    libraryDependencies += "org.encalmo" %% "script-utils" % "0.9.0"
+    libraryDependencies += "org.encalmo" %% "script-utils" % "0.9.1"
 
 or with SCALA-CLI
 
-    //> using dep org.encalmo::script-utils:0.9.0
+    //> using dep org.encalmo::script-utils:0.9.1
 
 ## Examples
 
