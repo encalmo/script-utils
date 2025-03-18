@@ -4,6 +4,8 @@
 
 Few handy commandline argument parsing and console printing utilities for use in Scala-CLI scripts.
 
+## Dependencies
+
 ## Usage
 
 Use with SBT
