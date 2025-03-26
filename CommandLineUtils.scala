@@ -93,46 +93,79 @@ object CommandLineUtils {
 
   inline def optionalScriptFlag(longName: String)(
       args: Array[String]
-  ): Boolean =
+  ): Boolean = {
     args.exists(a => a == s"--$longName" || a.startsWith(s"--$longName="))
+  }
 
-  def execute(command: String, cwd: os.Path = os.pwd, showOutput: Boolean = true): Either[Seq[String], Seq[String]] =
-    executeCommandArray(command.split(" "), cwd, showOutput)
+  def execute(
+      command: String,
+      cwd: os.Path = os.pwd,
+      showOutput: Boolean = true
+  ): Either[Iterable[String], Iterable[String]] = {
+    executeCommandArray(
+      command
+        .replace(" \\", " ")
+        .replace("\n", "")
+        .replace("\r", "")
+        .replace("\t", "  ")
+        .split(" ")
+        .filterNot(_.isBlank()),
+      cwd,
+      showOutput
+    )
+  }
 
   def executeCommandArray(
       commandArray: Array[String],
       cwd: os.Path = os.pwd,
       showOutput: Boolean = true
-  ): Either[Seq[String], Seq[String]] =
+  ): Either[Iterable[String], Iterable[String]] = {
     if (commandArray.length > 0)
     then {
       println(s"${BLUE}${BOLD}${commandArray.mkString(" ")}${RESET}")
-      val commandResult = os.proc(commandArray).call(check = false, cwd = cwd)
-      val lines = commandResult.out.lines()
+      val out = collection.mutable.Buffer[String]()
+      val commandResult = os
+        .proc(commandArray)
+        .call(
+          check = false,
+          cwd = cwd,
+          stdout = os.ProcessOutput.Readlines { line =>
+            if (showOutput) then {
+              print(BLUE)
+              print(line)
+              println(RESET)
+            }
+            out.append(line)
+          },
+          stderr = os.ProcessOutput.Readlines { line =>
+            if (showOutput) then {
+              print(RED)
+              print(line)
+              println(RESET)
+            }
+            out.append(line)
+          }
+        )
       if (commandResult.exitCode != 0)
       then {
-        if (showOutput) then {
-          lines.foreach { line =>
-            print(RED)
-            print(line)
-            println(RESET)
-          }
-        }
         println(
           s"${WHITE}${RED_B}[FATAL] script's command ${YELLOW}${commandArray(
               0
             )}${WHITE} returned ${commandResult.exitCode} ${RESET}"
         )
-        Left(lines)
+        Left(out)
       } else {
-        if (showOutput) then {
-          lines.foreach { line =>
-            print(BLUE)
-            print(line)
-            println(RESET)
-          }
-        }
-        Right(lines)
+        Right(out)
       }
     } else Left(Seq.empty)
+  }
+
+  extension [L, R](e: Either[L, R]) {
+    def exitOfFailure: R =
+      e.fold(
+        _ => System.exit(2).asInstanceOf[R],
+        identity
+      )
+  }
+
 }
