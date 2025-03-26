@@ -14,6 +14,7 @@ Few handy commandline argument parsing and console printing utilities for use in
 ## Dependencies
 
    - [Scala](https://www.scala-lang.org) >= 3.3.5
+   - com.lihaoyi [**os-lib** 0.11.4](https://github.com/com-lihaoyi/os-lib)
 
 ## Usage
 
@@ -80,6 +81,7 @@ printlnInfoMessage("Info!")
 ├── ConsoleUtils.test.scala
 ├── LICENSE
 ├── project.scala
-└── README.md
+├── README.md
+└── test.sh
 ```
 
