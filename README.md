@@ -28,6 +28,12 @@ or with SCALA-CLI
 ## Examples
 
 ```scala
+execute("git status")
+
+executeCommandArray(Array("git", "status"), showOutput = false)
+```
+
+```scala
 import org.encalmo.utils.CommandLineUtils.*
 
 val functionName: String = 

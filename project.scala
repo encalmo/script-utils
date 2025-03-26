@@ -1,5 +1,6 @@
 //> using scala 3.3.5
 //> using exclude scripts
+//> using dep com.lihaoyi::os-lib:0.11.4
 //> using test.dep org.scalameta::munit:1.1.0
 //> using publish.organization "org.encalmo"
 //> using publish.name "script-utils"

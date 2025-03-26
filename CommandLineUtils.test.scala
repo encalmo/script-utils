@@ -30,4 +30,12 @@ class CommandLineUtilsSpec extends munit.FunSuite {
     assertEquals(optionalScriptFlag("check-it")(args), true)
     assertEquals(optionalScriptFlag("check-it")(args2), true)
   }
+
+  test("execute a command") {
+    execute("git status")
+  }
+
+  test("execute a command array") {
+    executeCommandArray(Array("git", "status"), showOutput = false)
+  }
 }

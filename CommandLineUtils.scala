@@ -95,4 +95,35 @@ object CommandLineUtils {
       args: Array[String]
   ): Boolean =
     args.exists(a => a == s"--$longName" || a.startsWith(s"--$longName="))
+
+  def execute(command: String, cwd: os.Path = os.pwd, showOutput: Boolean = true): Seq[String] =
+    executeCommandArray(command.split(" "), cwd, showOutput)
+
+  def executeCommandArray(
+      commandArray: Array[String],
+      cwd: os.Path = os.pwd,
+      showOutput: Boolean = true
+  ): Seq[String] =
+    if (commandArray.length > 0)
+    then {
+      println(s"${BLUE}${BOLD}${commandArray.mkString(" ")}${RESET}")
+      val commandResult = os.proc(commandArray).call(check = false, cwd = cwd)
+      if (commandResult.exitCode != 0)
+      then {
+        println(
+          s"${WHITE}${RED_B}[FATAL] script's command ${YELLOW}${commandArray(
+              0
+            )}${WHITE} returned ${commandResult.exitCode} ${RESET}"
+        )
+      }
+      val lines = commandResult.out.lines()
+      if (showOutput) then {
+        lines.foreach { line =>
+          print(BLUE)
+          print(line)
+          println(RESET)
+        }
+      }
+      lines
+    } else Seq.empty
 }
